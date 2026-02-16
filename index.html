@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Stock Board</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+    <div class="board-container" id="board"></div>
+
+    <div id="drawer">
+        <div style="width: 40px; height: 4px; background: rgba(255,255,255,0.3); border-radius: 2px; margin-top: 10px;"></div>
+        <div class="drawer-content" id="drawer-content"></div>
+    </div>
+
+    <div class="drawer-buttons">
+        <button class="ctrl-btn" id="btn-sort-drawer" aria-label="Sort stocks in drawer"></button>
+        <button class="ctrl-btn" id="btn-close-drawer" aria-label="Close drawer"></button>
+    </div>
+
+    <div class="main-buttons">
+        <button class="ctrl-btn" id="btn-sort" aria-label="Sort stocks"></button>
+        <button class="ctrl-btn" id="btn-open-drawer" aria-label="Open drawer"></button>
+    </div>
+
+    <script src="js/dom-refs.js"></script>
+    <script src="js/config.js"></script>
+    <script src="js/data.js"></script>
+    <script src="js/layout.js"></script>
+    <script src="js/renderer.js"></script>
+    <script src="js/drawer.js"></script>
+    <script src="js/drag.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>

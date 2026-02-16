@@ -1,0 +1,235 @@
+:root {
+    --gap: 15px;
+    --bg-color: #000000;
+    --glass-bg: rgba(0, 0, 0, 0.5);
+    --glass-blur: blur(30px);
+}
+
+body {
+    background-color: var(--bg-color);
+    margin: 0;
+    height: 100vh;
+    width: 100vw;
+    overflow: hidden;
+    font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.board-container {
+    width: 100%;
+    height: 100%;
+    max-width: 1200px;
+    max-height: 800px;
+    padding: var(--gap);
+    position: relative;
+}
+
+.glow-wrapper {
+    position: absolute;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1;
+    transition: left 0.4s cubic-bezier(0.18, 0.89, 0.32, 1.28),
+                top 0.4s cubic-bezier(0.18, 0.89, 0.32, 1.28);
+}
+
+.glow-effect {
+    position: absolute;
+    width: 90%;
+    height: 90%;
+    border-radius: 50%;
+    box-shadow: 0 0 50px 10px var(--glow-color, rgba(255, 255, 255, 0.1));
+    filter: blur(10px);
+    opacity: 0.8;
+    z-index: 0;
+    transition: box-shadow 0.8s ease;
+}
+
+.circle {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    background-color: #0a0a0a;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    cursor: grab;
+    overflow: hidden;
+    z-index: 2;
+    mask-image: radial-gradient(white, black);
+    -webkit-mask-image: -webkit-radial-gradient(white, black);
+    transition: transform 0.2s ease, border-color 0.8s ease;
+}
+
+.glow-wrapper.dragging {
+    z-index: 100;
+    transition: transform 0.1s ease, left 0s, top 0s !important;
+}
+
+.glow-wrapper.dragging .circle {
+    transform: scale(1.1);
+}
+
+.wave-container {
+    position: absolute;
+    width: 300%;
+    height: 300%;
+    left: -100%;
+    top: 105%;
+    transition: top 1.5s cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: 1;
+}
+
+.wave {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background-color: #333;
+    border-radius: 46%;
+    animation: rotate-wave 10s linear infinite;
+}
+
+@keyframes rotate-wave {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.logo {
+    width: 35%;
+    height: 35%;
+    z-index: 10;
+    filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.8));
+    margin-bottom: 5px;
+}
+
+.logo img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+.percent {
+    font-size: 1.1rem;
+    font-weight: 900;
+    z-index: 10;
+    text-shadow: 0 0 10px rgba(0, 0, 0, 1);
+    transition: color 0.5s ease;
+    color: #fff;
+}
+
+#drawer {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    background: var(--glass-bg);
+    backdrop-filter: var(--glass-blur);
+    -webkit-backdrop-filter: var(--glass-blur);
+    border-top: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 30px 30px 0 0;
+    z-index: 1000;
+    transform: translateY(100%);
+    transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+#drawer.open {
+    transform: translateY(0);
+}
+
+.drawer-content {
+    width: 100%;
+    height: calc(100% - 20px);
+    box-sizing: border-box;
+    padding: 30px 10px 80px 10px;
+    display: flex;
+    flex-wrap: wrap;
+    align-content: center;
+    justify-content: center;
+    overflow-y: auto;
+    scrollbar-width: none;
+}
+
+.drawer-content.has-scroll {
+    align-content: flex-start;
+}
+
+.drawer-content::-webkit-scrollbar {
+    display: none;
+}
+
+.drawer-ball {
+    position: relative;
+    margin: 0;
+    flex-shrink: 0;
+    transition: width 0.3s ease, height 0.3s ease, margin 0.3s ease;
+}
+
+.drawer-ball .glow-effect {
+    filter: blur(6px);
+}
+
+.ctrl-btn {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    background: rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    cursor: pointer;
+    transition: background 0.25s ease, transform 0.2s ease, border-color 0.25s ease;
+    -webkit-tap-highlight-color: transparent;
+    outline: none;
+}
+
+.ctrl-btn:hover {
+    background: rgba(255, 255, 255, 0.18);
+    border-color: rgba(255, 255, 255, 0.45);
+}
+
+.ctrl-btn:active {
+    transform: scale(0.9);
+}
+
+.ctrl-btn.active {
+    background: rgba(255, 255, 255, 0.25);
+    border-color: rgba(255, 255, 255, 0.6);
+}
+
+.main-buttons {
+    position: fixed;
+    bottom: 24px;
+    left: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    z-index: 999;
+}
+
+.drawer-buttons {
+    position: fixed;
+    bottom: 24px;
+    left: 24px;
+    z-index: 1002;
+    display: none;
+    flex-direction: column;
+    gap: 12px;
+}
+
+#drawer.open ~ .drawer-buttons {
+    display: flex;
+}
+
+#drawer.open ~ .main-buttons {
+    display: none;
+}
