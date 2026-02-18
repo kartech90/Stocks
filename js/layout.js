@@ -2,7 +2,7 @@ let positions = [];
 
 function calcDrawerLayout() {
     const count = stockData.length;
-    if (count === 0) return { size: 100, gap: 14, fontSize: 0.9 };
+    if (count === 0) return { size: 100, gap: 20, fontSize: 0.9 };
 
     const containerW = window.innerWidth;
     const containerH = window.innerHeight;
@@ -11,49 +11,52 @@ function calcDrawerLayout() {
     const padBottom = 90;
     const usableW = containerW - (padX * 2);
     const usableH = containerH - padTop - padBottom;
-    const spacing = 14;
+
+    const minGap = 20;
+    const maxGap = 32;
 
     let bestSize = 0;
     let bestCols = 1;
-    let needsScroll = false;
+    let bestGap = minGap;
 
-    for (let cols = 1; cols <= Math.min(count, 10); cols++) {
+    for (let cols = 1; cols <= Math.min(count, 12); cols++) {
         const rows = Math.ceil(count / cols);
-        const sizeByW = (usableW - spacing * (cols + 1)) / cols;
-        const sizeByH = (usableH - spacing * (rows + 1)) / rows;
-        const fitSize = Math.floor(Math.min(sizeByW, sizeByH));
 
-        if (fitSize > bestSize && fitSize > 20) {
-            bestSize = fitSize;
-            bestCols = cols;
-            needsScroll = false;
-        }
-    }
+        for (let gap = maxGap; gap >= minGap; gap -= 2) {
+            const availW = usableW - gap * (cols + 1);
+            const availH = usableH - gap * (rows + 1);
 
-    if (bestSize < 60) {
-        for (let cols = 2; cols <= Math.min(count, 8); cols++) {
-            const sizeByW = (usableW - spacing * (cols + 1)) / cols;
-            if (sizeByW >= 60 && sizeByW <= 200) {
-                bestSize = Math.floor(sizeByW);
+            if (availW <= 0 || availH <= 0) continue;
+
+            const sizeByW = Math.floor(availW / cols);
+            const sizeByH = Math.floor(availH / rows);
+            const fitSize = Math.min(sizeByW, sizeByH);
+
+            if (fitSize > bestSize && fitSize >= 20) {
+                bestSize = fitSize;
                 bestCols = cols;
-                needsScroll = true;
-                break;
+                bestGap = gap;
             }
         }
-        if (bestSize < 60) {
-            bestCols = 3;
-            bestSize = Math.floor((usableW - spacing * 4) / 3);
-            needsScroll = true;
-        }
     }
 
-    const fontSize = Math.max(0.5, Math.min(1.1, bestSize / 110));
+    if (bestSize < 30) {
+        bestCols = Math.ceil(Math.sqrt(count));
+        const rows = Math.ceil(count / bestCols);
+        bestGap = minGap;
+        const availW = usableW - bestGap * (bestCols + 1);
+        const availH = usableH - bestGap * (rows + 1);
+        bestSize = Math.max(20, Math.floor(Math.min(availW / bestCols, availH / rows)));
+    }
+
+    const fontSize = Math.max(0.4, Math.min(1.1, bestSize / 110));
 
     return {
         size: bestSize,
-        gap: spacing,
+        gap: bestGap,
         fontSize: fontSize,
-        needsScroll: needsScroll
+        cols: bestCols,
+        needsScroll: false
     };
 }
 
