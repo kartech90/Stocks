@@ -43,13 +43,20 @@ function renderAll() {
 
     const layout = calcDrawerLayout();
 
-    if (layout.needsScroll) {
-        drawerContent.classList.add('has-scroll');
-    } else {
-        drawerContent.classList.remove('has-scroll');
-    }
+    // Never scroll - always fit everything
+    drawerContent.classList.remove('has-scroll');
+    drawerContent.style.overflow = 'hidden';
 
+    // Use flexbox with wrap for natural centering of last row
+    drawerContent.style.display = 'flex';
+    drawerContent.style.flexWrap = 'wrap';
+    drawerContent.style.justifyContent = 'center';
+    drawerContent.style.alignContent = 'center';
     drawerContent.style.gap = `${layout.gap}px`;
+    drawerContent.style.padding = `${layout.gap}px`;
+    drawerContent.style.boxSizing = 'border-box';
+    drawerContent.style.width = '100%';
+    drawerContent.style.height = '100%';
 
     stockData.forEach((stock, i) => {
         if (i < BOARD_SIZE) {
@@ -70,7 +77,13 @@ function renderAll() {
         drawerEl.style.top = '0';
         drawerEl.style.width = `${layout.size}px`;
         drawerEl.style.height = `${layout.size}px`;
-        drawerEl.style.margin = `${layout.gap / 2}px`;
+        drawerEl.style.minWidth = `${layout.size}px`;
+        drawerEl.style.minHeight = `${layout.size}px`;
+        drawerEl.style.maxWidth = `${layout.size}px`;
+        drawerEl.style.maxHeight = `${layout.size}px`;
+        drawerEl.style.margin = '0';
+        drawerEl.style.flexShrink = '0';
+        drawerEl.style.flexGrow = '0';
         drawerEl.innerHTML = createBallHTML(stock);
 
         const percentEl = drawerEl.querySelector('.percent');
